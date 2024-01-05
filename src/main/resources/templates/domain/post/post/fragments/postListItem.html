@@ -1,0 +1,42 @@
+<html>
+<head>
+
+</head>
+
+<body>
+
+<!-- postListItem 프레그먼트 정의 -->
+<div th:fragment="postListItem(post)">
+    <a th:href="@{/post/{id}(id=${post.id})}">
+        <span th:text="${post.title}">제목</span>
+    </a>
+    <div th:text="${post.createDate}">작성일</div>
+    <div th:text="${post.minMembershipLevel}">레벨</div>
+
+    <div class="flex gap-2 mt-4">
+        <a th:if="${@postService.canLike(@rq.member, post)}"
+           th:href="|/post/${post.id}/like?redirectUrl=${@rq.encodedCurrentUrl}|" method="POST">
+            추천
+        </a>
+
+        <a th:if="${@postService.canCancelLike(@rq.member, post)}"
+           th:href="|/post/${post.id}/cancelLike?redirectUrl=${@rq.encodedCurrentUrl}|" method="DELETE">
+            추천취소
+        </a>
+
+        <a th:if="${@postService.canModify(@rq.member, post)}" th:href="|/post/${post.id}/edit|">글 수정</a>
+
+        <a
+                th:if="${@postService.canDelete(@rq.member, post)}"
+                th:href="|/post/${post.id}/delete?redirectUrl=${@rq.encodedCurrentUrl}|"
+                method="DELETE"
+                onclick="return confirm('정말로 삭제하시겠습니까?');"
+        >
+            글 삭제
+        </a>
+    </div>
+</div>
+
+</body>
+
+</html>

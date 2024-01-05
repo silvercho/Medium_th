@@ -1,0 +1,33 @@
+<html layout:decorate="~{global/usrLayout}">
+
+<head>
+    <title th:text="|회원 목록|"></title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <h1>회원 목록</h1>
+
+    <ul>
+        <li th:each="member : ${itemPage.content}">
+            <a th:href="|/member/${member.id}|">
+                <span th:text="${member.id}"></span>
+                /
+                <span th:text="${member.username}"></span>
+                /
+                <span th:text="${member.membershipLevel}"></span>
+            </a>
+        </li>
+    </ul>
+
+    <th:block th:with="queryStrBase = ${@rq.getCurrentQueryStringWithoutParam('page')}">
+        <th:block th:replace="global/fragments/pagination :: pagination(${itemPage}, ${queryStrBase}, 1)">
+
+        </th:block>
+    </th:block>
+</div>
+
+</body>
+
+</html>

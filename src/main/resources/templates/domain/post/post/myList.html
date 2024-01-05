@@ -1,0 +1,27 @@
+<html layout:decorate="~{global/usrLayout}">
+
+<head>
+    <title th:text="|내글 목록|"></title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <h1>내글 목록</h1>
+
+    <ul>
+        <li th:each="post : ${postPage.content}">
+            <th:block th:replace="domain/post/post/fragments/postListItem :: postListItem(${post})"/>
+        </li>
+    </ul>
+
+    <th:block th:with="queryStrBase = ${@rq.getCurrentQueryStringWithoutParam('page')}">
+        <th:block th:replace="global/fragments/pagination :: pagination(${postPage}, ${queryStrBase}, 1)">
+
+        </th:block>
+    </th:block>
+</div>
+
+</body>
+
+</html>
