@@ -16,6 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @Getter
 @Setter
+@ToString(callSuper = true)
 public class PostDetail extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Post post;

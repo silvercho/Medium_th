@@ -2,9 +2,7 @@ package com.ll.medium.domain.base.genFile.service;
 
 import com.ll.medium.domain.base.genFile.entity.GenFile;
 import com.ll.medium.domain.base.genFile.repository.GenFileRepository;
-import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.global.app.AppConfig;
-import com.ll.medium.global.jpa.BaseEntity;
 import com.ll.medium.standard.util.Ut.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -132,31 +129,7 @@ public class GenFileService {
     }
 
     @Transactional
-    public GenFile saveTempFile(Member actor, MultipartFile file) {
-        return save("temp_" + actor.getModelName(), actor.getId(), "common", "editorUpload", 0, file);
-    }
-
-    @Transactional
-    public GenFile tempToFile(String url, BaseEntity entity, String typeCode, String type2Code, long fileNo) {
-        String fileName = Ut.file.getFileNameFromUrl(url);
-        String fileExt = Ut.file.getFileExt(fileName);
-
-        long genFileId = Long.parseLong(fileName.replace("." + fileExt, ""));
-        GenFile tempGenFile = findById(genFileId).get();
-
-        GenFile newGenFile = save(entity.getModelName(), entity.getId(), typeCode, type2Code, fileNo, tempGenFile.getFilePath());
-
-        remove(tempGenFile);
-
-        return newGenFile;
-    }
-
-    public void removeOldTempFiles() {
-        findOldTempFiles().forEach(this::remove);
-    }
-
-    private List<GenFile> findOldTempFiles() {
-        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
-        return genFileRepository.findByRelTypeCodeAndCreateDateBefore("temp", oneDayAgo);
+    public GenFile saveFile(String relTypeCode, long relId, String typeCode, String type2Code, long fileNo, MultipartFile file) {
+        return save(relTypeCode, relId, typeCode, type2Code, fileNo, file);
     }
 }

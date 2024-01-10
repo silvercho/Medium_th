@@ -140,4 +140,7 @@ public class Rq {
     public String getProfileImgUrl() {
         return memberService.getProfileImgUrl(getMember());
     }
+    public String getReferer() {
+        return request.getHeader("referer");
+    }
 }

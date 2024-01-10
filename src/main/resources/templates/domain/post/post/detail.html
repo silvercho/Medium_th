@@ -47,7 +47,7 @@
         <div th:if="${@postService.canRead(@rq.member, post)}"
              class="toast-ui-viewer"
         >
-            <script type="text/x-template" th:utext="${post.detailBody?.val}"></script>
+            <script type="text/x-template" th:utext="${post.bodyForEditor}"></script>
         </div>
 
         <div th:unless="${@postService.canRead(@rq.member, post)}">

@@ -19,6 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @Getter
 @Setter
+@ToString(callSuper = true)
 public class Member extends BaseEntity {
     private String username;
     private String password;

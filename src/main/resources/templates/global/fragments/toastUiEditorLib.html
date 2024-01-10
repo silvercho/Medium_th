@@ -386,9 +386,10 @@
                             const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
                             const formData = new FormData();
+                            formData.append('refererUrl', location.pathname + location.search);
                             formData.append('file', blob);
 
-                            fetch('/genFile/temp', {
+                            fetch('/genFile/upload', {
                                 method: 'POST',
                                 headers: {
                                     'Accept': 'application/json',
@@ -398,7 +399,7 @@
                             }).then(function (response) {
                                 return response.json();
                             }).then(function (myJson) {
-                                callback(myJson.data + "?type=temp");
+                                callback(myJson.data);
                             });
                         }
                     },

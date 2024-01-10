@@ -18,6 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @Getter
 @Setter
+@ToString(callSuper = true)
 public class PostComment extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Member author;

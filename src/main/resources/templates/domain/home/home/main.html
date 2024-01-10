@@ -11,7 +11,7 @@
 
     <ul>
         <li th:each="post : ${posts}">
-            <th:block th:replace="domain/post/post/fragments/postListItem :: postListItem(${post})"/>
+            <th:block th:replace="~{domain/post/post/fragments/postListItem :: postListItem(${post})}"/>
         </li>
     </ul>
 </div>
