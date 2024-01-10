@@ -23,6 +23,6 @@ logging:
 custom:
   tempDirPath: /gen/temp
   site:
-    baseUrl: "https://www.s-code.io"
+    baseUrl: "https://last-medium.oa.gg"
   genFile:
     dirPath: /gen

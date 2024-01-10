@@ -6,6 +6,7 @@
 
 <body>
 <div layout:fragment="content">
+    <th:block th:replace="global/fragments/toastUiEditorLib :: toastUiEditorLib"></th:block>
     <h1>글 편집</h1>
 
     <script>
@@ -18,11 +19,15 @@
                 return;
             }
 
-            form.body.value = form.body.value.trim();
+            const editor = $(form).find(".toast-ui-editor").data("data-toast-editor");
+
+            const markdown = editor.getMarkdown().trim();
+
+            form.body.value = markdown;
 
             if (form.body.value.length == 0) {
-                toastWarning('내용을 입력해주세요.');
-                form.body.focus();
+                toastWarning("내용을 입력해주세요");
+                editor.focus();
                 return;
             }
 
@@ -31,6 +36,7 @@
     </script>
 
     <form th:action method="POST" onsubmit="submitEditForm(this); return false;">
+        <input type="hidden" name="body">
         <input type="hidden" name="_method" value="PUT">
         <div>
             <label>번호</label>
@@ -58,7 +64,13 @@
 
         <div>
             <label>내용</label>
-            <textarea name="body" th:text="${post.detailBody?.val}"></textarea>
+            <div
+                    class="toast-ui-editor"
+                    height="calc(100vh - 400px)"
+                    placeholder="내용"
+            >
+                <script type="text/x-template" th:utext="${post.detailBody?.val}"></script>
+            </div>
         </div>
 
         <button type="submit">글 저장</button>

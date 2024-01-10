@@ -1,5 +1,6 @@
 package com.ll.medium.global.jpa;
 
+import com.ll.medium.standard.util.Ut.Ut;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
@@ -18,4 +19,8 @@ public abstract class IdEntity {
     @GeneratedValue(strategy = IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
+
+    public String getModelName() {
+        return Ut.str.lcfirst(this.getClass().getSimpleName());
+    }
 }

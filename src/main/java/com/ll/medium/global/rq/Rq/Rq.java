@@ -1,6 +1,7 @@
 package com.ll.medium.global.rq.Rq;
 
 import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.global.rsData.RsData.RsData;
 import com.ll.medium.global.security.SecurityUser;
 import com.ll.medium.standard.util.Ut.Ut;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @RequestScope
 @RequiredArgsConstructor
 public class Rq {
+    private final MemberService memberService;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final EntityManager entityManager;
@@ -134,5 +136,8 @@ public class Rq {
         }
 
         return url;
+    }
+    public String getProfileImgUrl() {
+        return memberService.getProfileImgUrl(getMember());
     }
 }
