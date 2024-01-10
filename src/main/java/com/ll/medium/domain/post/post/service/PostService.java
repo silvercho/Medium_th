@@ -11,13 +11,16 @@ import com.ll.medium.domain.post.postComment.entity.PostComment;
 import com.ll.medium.domain.post.postComment.repository.PostCommentRepository;
 import com.ll.medium.domain.post.postLike.entity.PostLike;
 import com.ll.medium.domain.post.postLike.repository.PostLikeRepository;
+import com.ll.medium.global.rq.Rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,7 +30,9 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostDetailRepository postDetailRepository;
     private final PostLikeRepository postLikeRepository;
-    private final PostCommentRepository postCommentRepository;    private final GenFileService genFileService;
+    private final PostCommentRepository postCommentRepository;
+    private final GenFileService genFileService;
+    private final Rq rq;
 
     @Transactional
     public Post write(Member author, String title, String body, boolean published) {
@@ -57,8 +62,8 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public Page<Post> search(String kw, Pageable pageable) {
-        return postRepository.search(true, kw, pageable);
+    public Page<Post> search(List<String> kwTypes, String kw, Pageable pageable) {
+        return postRepository.search(true, kwTypes, kw, pageable);
     }
 
     public Page<Post> search(Member author, Boolean published, String kw, Pageable pageable) {
@@ -90,11 +95,23 @@ public class PostService {
         if (actor == null) return false;
         if (!canRead(actor,post)) return false;
 
+        Map<Long, Boolean> likeMap = rq.attr("likeMap");
+        if (likeMap != null) {
+            Boolean cached = likeMap.get(post.getId());
+            if (cached != null) return !cached;
+        }
+
         return !post.hasLike(actor);
     }
 
     public boolean canCancelLike(Member actor, Post post) {
         if (actor == null) return false;
+
+        Map<Long, Boolean> likeMap = rq.attr("likeMap");
+        if (likeMap != null) {
+            Boolean cached = likeMap.get(post.getId());
+            if (cached != null) return cached;
+        }
 
         return post.hasLike(actor);
     }
@@ -206,5 +223,27 @@ public class PostService {
 
     public List<PostLike> findLikesByPostInAndMember(List<Post> posts, Member member){
         return postLikeRepository.findByPostInAndMember(posts, member);
+    }
+
+    public void loadLikeMapOnRequestScope(List<Post> posts, Member member) {
+        List<PostLike> likes = findLikesByPostInAndMember(posts, rq.getMember());
+
+        Map<Long, Boolean> likeMap_ = likes
+                .stream()
+                .collect(
+                        HashMap::new,
+                        (map, like) -> map.put(like.getPost().getId(), true),
+                        HashMap::putAll
+                );
+
+        Map<Long, Boolean> likeMap = posts
+                .stream()
+                .collect(
+                        HashMap::new,
+                        (map, post) -> map.put(post.getId(), likeMap_.getOrDefault(post.getId(), false)),
+                        HashMap::putAll
+                );
+
+        rq.attr("likeMap", likeMap);
     }
 }

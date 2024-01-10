@@ -33,8 +33,8 @@ public class AdmMemberController {
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
 
         Page<Member> itemPage = memberService.search(kw, pageable);
-        rq.setAttribute("itemPage", itemPage);
-        rq.setAttribute("page", page);
+        rq.attr("itemPage", itemPage);
+        rq.attr("page", page);
 
         return "domain/member/member/adm/list";
     }

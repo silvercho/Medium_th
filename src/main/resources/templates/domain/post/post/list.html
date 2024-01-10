@@ -2,12 +2,44 @@
 
 <head>
     <title th:text="|글 목록|"></title>
+    <script>
+        function submitSearchForm(form) {
+            const kwTypeCheckboxes = form.querySelectorAll("input[name='kwType']");
+
+            const isChecked = Array.from(kwTypeCheckboxes).some(checkbox => checkbox.checked);
+
+            if (!isChecked) {
+                alert("최소한 하나의 검색 유형을 선택해야 합니다.");
+
+                if (kwTypeCheckboxes.length > 0) {
+                    kwTypeCheckboxes[0].focus();
+                }
+
+                return;
+            }
+
+            form.submit();
+        }
+    </script>
 </head>
 
 <body>
 
 <div layout:fragment="content">
     <h1>글 목록</h1>
+    <form onsubmit="submitSearchForm(this); return false;">
+        <div style="display:flex; gap:10px;">
+            <label><input type="checkbox" name="kwType" value="authorUsername"
+                          th:checked="${kwTypesMap['authorUsername']}"><span>작성자</span></label>
+            <label><input type="checkbox" name="kwType" value="title"
+                          th:checked="${kwTypesMap['title']}"><span>제목</span></label>
+            <label><input type="checkbox" name="kwType" value="body"
+                          th:checked="${kwTypesMap['body']}"><span>내용</span></label>
+        </div>
+        <input type="search" name="kw" placeholder="검색어" th:value="${param.kw}">
+        <input type="submit" value="검색">
+    </form>
+
 
     <ul>
         <li th:each="post : ${postPage.content}">

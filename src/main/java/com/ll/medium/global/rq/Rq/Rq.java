@@ -97,7 +97,7 @@ public class Rq {
                 .anyMatch(it -> it.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    public void setAttribute(String key, Object value) {
+    public void attr(String key, Object value) {
         request.setAttribute(key, value);
     }
 
@@ -142,5 +142,8 @@ public class Rq {
     }
     public String getReferer() {
         return request.getHeader("referer");
+    }
+    public <T> T attr(String name) {
+        return (T) request.getAttribute(name);
     }
 }

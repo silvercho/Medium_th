@@ -20,15 +20,16 @@
     <div th:text="${post.minMembershipLevel}">레벨</div>
 
     <div class="flex gap-2 mt-4">
-        <a th:if="${@postService.canLike(@rq.member, post)}"
-           th:href="|/post/${post.id}/like?redirectUrl=${@rq.encodedCurrentUrl}|" method="POST">
-            추천
-        </a>
+        <th:block th:if="${likeMap != null}">
+            <a th:if="${@postService.canLike(@rq.member, post)}"
+               th:href="|/post/${post.id}/like?redirectUrl=${@rq.encodedCurrentUrl}|" method="POST">
+                추천
+            </a>
 
-        <a th:if="${@postService.canCancelLike(@rq.member, post)}"
-           th:href="|/post/${post.id}/cancelLike?redirectUrl=${@rq.encodedCurrentUrl}|" method="DELETE">
-            추천취소
-        </a>
+            <a th:if="${@postService.canCancelLike(@rq.member, post)}"
+               th:href="|/post/${post.id}/cancelLike?redirectUrl=${@rq.encodedCurrentUrl}|" method="DELETE">
+                추천취소
+            </a>
 
         <a th:if="${@postService.canModify(@rq.member, post)}" th:href="|/post/${post.id}/edit|">글 수정</a>
 
@@ -41,6 +42,7 @@
             글 삭제
         </a>
     </div>
+    <hr>
 </div>
 
 </body>

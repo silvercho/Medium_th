@@ -53,8 +53,8 @@ public class PostCommentController {
         if (!postService.canModifyComment(rq.getMember(), postComment))
             throw new GlobalException("403-1", "해당 댓글을 수정할 권한이 없습니다.");
 
-        rq.setAttribute("post", post);
-        rq.setAttribute("postComment", postComment);
+        rq.attr("post", post);
+        rq.attr("postComment", postComment);
 
         return "domain/post/postComment/modify";
     }
