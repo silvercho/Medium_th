@@ -7,9 +7,15 @@
 
 <!-- postListItem 프레그먼트 정의 -->
 <div th:fragment="postListItem(post)">
-    <a th:href="@{/post/{id}(id=${post.id})}">
+    <a th:if="${@postService.canRead(@rq.member, post)}" th:href="@{/post/{id}(id=${post.id})}">
         <span th:text="${post.title}">제목</span>
     </a>
+
+    <a th:unless="${@postService.canRead(@rq.member, post)}" th:href="@{/post/{id}(id=${post.id})}">
+        <span>비공개 글</span>
+    </a>
+
+    <div th:text="${post.author.username}">작성자</div>
     <div th:text="${post.createDate}">작성일</div>
     <div th:text="${post.minMembershipLevel}">레벨</div>
 

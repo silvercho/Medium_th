@@ -36,12 +36,14 @@
 
     <div>
         <h3>제목</h3>
-        <div th:text="${post.title}"></div>
+        <div th:if="${@postService.canRead(@rq.member, post)}" th:text="${post.title}"></div>
+        <div th:unless="${@postService.canRead(@rq.member, post)}">비공개 글</div>
     </div>
 
     <div>
         <h3>내용</h3>
-        <div style="white-space: pre-wrap;" th:text="${post.detailBody.val}"></div>
+        <div th:if="${@postService.canRead(@rq.member, post)}"  style="white-space: pre-wrap;" th:text="${post.detailBody.val}"></div>
+        <div th:unless="${@postService.canRead(@rq.member, post)}"  style="white-space: pre-wrap;">비공개 글</div>
     </div>
 
     <hr>
@@ -71,7 +73,7 @@
         </a>
     </div>
 
-    <th:block th:if="${@rq.login}">
+    <th:block th:if="${@rq.login && @postService.canRead(@rq.member, post)}">
         <h3>댓글 작성</h3>
         <form th:action="|/post/${post.id}/comment/write|" method="POST">
             <textarea name="body" cols="30" rows="10" required maxlength="10000" placeholder="댓글"></textarea>

@@ -32,7 +32,8 @@ public class PostController {
     public String showDetail(@PathVariable long id) {
         Post post = postService.findById(id).orElseThrow(() -> new GlobalException("404-1", "해당 글이 존재하지 않습니다."));
 
-        postService.increaseHit(post);
+        if (postService.canRead(rq.getMember(), post))
+            postService.increaseHit(post);
 
         rq.setAttribute("post", post);
 

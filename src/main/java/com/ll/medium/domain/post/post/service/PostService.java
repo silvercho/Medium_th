@@ -25,10 +25,15 @@ public class PostService {
 
     @Transactional
     public Post write(Member author, String title, String body, boolean published) {
+        return write(author, title, body, published, 0);
+    }
+    @Transactional
+    public Post write(Member author, String title, String body, boolean published, int minMembershipLevel){
         Post post = Post.builder()
                 .author(author)
                 .title(title)
                 .published(published)
+                .minMembershipLevel(minMembershipLevel)
                 .build();
 
         postRepository.save(post);
@@ -54,8 +59,30 @@ public class PostService {
         return postRepository.search(author, published, kw, pageable);
     }
 
+    public boolean canRead(Member actor, Post post){
+        if (actor == null) {
+            // 비회원인 경우 공개된 글만 볼 수 있다.
+            if (post.isPublished() && post.getMinMembershipLevel() == 0) return true;
+        } else {
+            // 작성자인 경우 무조건 보기 가능
+            if (post.getAuthor().equals(actor)) return true;
+
+            // 관리자인 경우 무조건 보기 가능
+            if (actor.isAdmin()) return true;
+
+            // 그 외에는 공개되지 않은 글을 절대 볼 수 없다.
+            if (!post.isPublished()) return false;
+
+            // 공개되어 있다면 멤버십 레벨을 체크한다.
+            if (actor.getMembershipLevel() >= post.getMinMembershipLevel()) return true;
+        }
+
+        return false;
+    }
+
     public boolean canLike(Member actor, Post post) {
         if (actor == null) return false;
+        if (!canRead(actor,post)) return false;
 
         return !post.hasLike(actor);
     }

@@ -65,5 +65,13 @@ public class NotProd {
         postService.like(memberUser3, post2);
 
         postService.like(memberUser2, post3);
+
+        int lastUsernameNo = 4;
+        int lastPostId = 50;
+
+        for (int i = 0; i < 100; i++) {
+            Member user = memberService.join("user" + ++lastUsernameNo, "1234", 1).getData();
+            Post post = postService.write(user, "제목 " + ++lastPostId, "내용 " + lastPostId, true, 1);
+        }
     }
 }
