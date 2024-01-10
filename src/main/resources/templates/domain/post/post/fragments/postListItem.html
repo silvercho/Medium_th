@@ -17,7 +17,18 @@
 
     <div th:text="${post.author.username}">작성자</div>
     <div th:text="${post.createDate}">작성일</div>
-    <div th:text="${post.minMembershipLevel}">레벨</div>
+    <div>
+        레벨 :
+        <span th:text="${post.minMembershipLevel}"></span>
+    </div>
+    <div>
+        조회수 :
+        <span th:text="${post.hit}"></span>
+    </div>
+    <div>
+        추천수 :
+        <span th:text="${post.likesCount}"></span>
+    </div>
 
     <div class="flex gap-2 mt-4">
         <th:block th:if="${likeMap != null}">

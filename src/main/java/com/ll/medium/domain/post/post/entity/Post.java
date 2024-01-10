@@ -47,8 +47,19 @@ public class Post extends BaseEntity {
     private boolean published;
     @Setter(PROTECTED)
     private long hit;
+
+    @Setter(PROTECTED)
+    private long likesCount;
+
     private int minMembershipLevel;
 
+    public void increaseLikesCount() {
+        likesCount++;
+    }
+
+    private void decreaseLikesCount() {
+        likesCount--;
+    }
     public void increaseHit() {
         hit++;
     }
@@ -62,6 +73,8 @@ public class Post extends BaseEntity {
                 .post(this)
                 .member(member)
                 .build());
+
+        increaseLikesCount();
     }
 
     public boolean hasLike(Member member) {
@@ -70,7 +83,11 @@ public class Post extends BaseEntity {
     }
 
     public void deleteLike(Member member) {
-        likes.removeIf(postLike -> postLike.getMember().equals(member));
+        boolean removed = likes.removeIf(postLike -> postLike.getMember().equals(member));
+
+        if (removed) {
+            decreaseLikesCount();
+        }
     }
 
     public PostComment writeComment(Member actor, String body) {

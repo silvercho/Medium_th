@@ -46,10 +46,19 @@ public class PostController {
     public String showList(
             @RequestParam(value = "kwType", defaultValue = "title,body") List<String> kwTypes,
             @RequestParam(defaultValue = "") String kw,
-            @RequestParam(defaultValue = "1") int page
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "idDesc") String sortCode
     ) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("id"));
+        List<Sort.Order> sorts = switch (sortCode) {
+            case "idDesc" -> List.of(Sort.Order.desc("id"));
+            case "idAsc" -> List.of(Sort.Order.asc("id"));
+            case "hitDesc" -> List.of(Sort.Order.desc("hit"));
+            case "hitAsc" -> List.of(Sort.Order.asc("hit"));
+            case "likesCountDesc" -> List.of(Sort.Order.desc("likesCount"));
+            case "likesCountAsc" -> List.of(Sort.Order.asc("likesCount"));
+            default -> throw new GlobalException("404-1", "존재하지 않는 정렬코드입니다.");
+        };
+
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
 
         Page<Post> postPage = postService.search(kwTypes, kw, pageable);

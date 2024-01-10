@@ -28,16 +28,32 @@
 <div layout:fragment="content">
     <h1>글 목록</h1>
     <form onsubmit="submitSearchForm(this); return false;">
-        <div style="display:flex; gap:10px;">
-            <label><input type="checkbox" name="kwType" value="authorUsername"
-                          th:checked="${kwTypesMap['authorUsername']}"><span>작성자</span></label>
-            <label><input type="checkbox" name="kwType" value="title"
-                          th:checked="${kwTypesMap['title']}"><span>제목</span></label>
-            <label><input type="checkbox" name="kwType" value="body"
-                          th:checked="${kwTypesMap['body']}"><span>내용</span></label>
+        <div class="flex gap-3">
+            <label class="flex items-center gap-1"><input class="checkbox" type="checkbox" name="kwType"
+                                                          value="authorUsername"
+                                                          th:checked="${kwTypesMap['authorUsername']}"><span>작성자</span></label>
+            <label class="flex items-center gap-1"><input class="checkbox" type="checkbox" name="kwType" value="title"
+                                                          th:checked="${kwTypesMap['title']}"><span>제목</span></label>
+            <label class="flex items-center gap-1"><input class="checkbox" type="checkbox" name="kwType" value="body"
+                                                          th:checked="${kwTypesMap['body']}"><span>내용</span></label>
         </div>
-        <input type="search" name="kw" placeholder="검색어" th:value="${param.kw}">
-        <input type="submit" value="검색">
+        <div class="mt-3">
+            <select
+                    class="select select-bordered"
+                    name="sortCode"
+                    th:value="${param.sortCode}"
+                    onchange="submitSearchForm(this.form)"
+            >
+                <option value="idDesc">최신순</option>
+                <option value="idAsc">날짜순</option>
+                <option value="hitDesc">조회순</option>
+                <option value="hitAsc">조회역순</option>
+                <option value="likesCountDesc">추천순</option>
+                <option value="likesCountAsc">추천역순</option>
+            </select>
+        </div>
+        <input type="search" class="input input-bordered mt-3" name="kw" placeholder="검색어" th:value="${param.kw}">
+        <input type="submit" class="btn btn-primary" value="검색">
     </form>
 
 
